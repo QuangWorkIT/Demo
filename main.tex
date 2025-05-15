@@ -1,0 +1,122 @@
+\documentclass[13pt]{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{fontspec}
+\usepackage{minted}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Overleaf Example},
+    pdfpagemode=FullScreen,
+    }
+\setmainfont{Times New Roman}
+\title{React Report}
+\author{quang nguyễn}
+\date{May 2025}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+React is a JavaScript library for building user interfaces, designed with a declarative and component-based approach. You break your UI into components (independent, reusable pieces) that manage their own state and return React elements describing the UI. React uses a Virtual DOM: an in-memory representation of the UI that it syncs efficiently with the real DOM. Because you tell React what state you want (declaratively), it handles the DOM updates for you. This makes UIs faster and code more predictable. React follows one-way (unidirectional) data flow for props, which simplifies reasoning about your app.
+
+\section{Fundamental}
+\subsection{Virtual DOM and Reconciliation}
+The Virtual DOM (VDOM) is an in-memory lightweight JavaScript object that mirrors the real DOM structure.
+React uses this VDOM to efficiently update the UI without unnecessarily touching the real DOM.
+
+\begin{itemize}
+  \item The real DOM is like a huge and slow whiteboard.
+  \item The Virtual DOM is like a draft sketch of that whiteboard.
+  \item Instead of erasing and redrawing the whiteboard every time something changes, React: 
+    \begin{enumerate}
+        \item Changes the draft (Virtual DOM).
+        \item Compares it to the old draft.
+        \item Only updates what is different on the whiteboard (real DOM).
+    \end{enumerate}
+\end{itemize}
+
+Reconciliation is the process React uses to compare the new Virtual DOM with the previous one and determine the minimal set of changes needed to update the real DOM.
+This makes updates faster, since React skips touching elements that haven't changed.
+
+React uses a \textbf{diffing algorithm} based on the following heuristics:
+\begin{enumerate}
+    \item Element types differ → destroy old and create new DOM node.
+    \item Same type, different props update the DOM node.
+    \item Children list (e.g. arrays) → use key to efficiently diff and reorder.
+\end{enumerate}
+
+\subsection{Basic concepts}
+\subsubsection{JSX}
+JSX is a JavaScript syntax extension that looks like HTML. It 
+lets you write markup directly in JS files. 
+
+\begin{minted} {javascript}
+    const element = <h1>Hello, world!</h1>;
+\end{minted}
+
+\subsubsection{Functional Components}
+A React component is a function that returns a React element (via JSX). The function components accept a single prop object as an argument and return JSX.
+
+\begin{minted} {javascript}
+    function Welcome(props) {
+        return <h2>Hello, {props.name}!</h2>;
+    }
+\end{minted}
+
+\subsubsection{Props}
+Props (short for "properties") are how parents pass data to children. You specify props as attributes on a component: <Greeting title="Hi" count={3} />. Inside the child, all props are in the props object.
+
+\begin{minted} {javascript}
+    function Greeting(props) {
+        return <h2>
+        {props.title}, you have {props.count} unread messages. 
+        </h2>;
+    }
+\end{minted}
+
+Data one-way (unidirectional) flow which means data flows from parent → child through props.
+
+\begin{minted}{javascript}
+    function Parent() {
+        return <Child name="Alice" />;
+    }
+
+    function Child({ name }) {
+      return <h1>Hello, {name}</h1>;
+    }
+\end{minted}
+
+\subsection{React render}
+The first render (mount) is happening when the component is added to the DOM for the first time. Then other changes will make the  re-render(update) occurs.
+
+\textbf{React re-renders a component when}:
+\begin{itemize}
+    \item Its state changes (useState, useReducer).
+    \item Its props change.
+    \item Its context value changes (if the component consumes context via useContext).
+    \item Its parent re-renders (causing child to re-render unless memorized).
+    \item A force update (rare, using forceUpdate in class components).
+\end{itemize}
+
+\textbf{Re-render process}
+
+Include 3 main phase
+\begin{enumerate}
+    \item \textit{Trigger Phase}: Something happens that causes a re-render.
+    \item \textit{Render Phase (Reconciliation)}: React compares the new virtual DOM to the previous one (diffing).
+    \item \textit{Commit Phase}: React applies the changes to the real DOM.
+\end{enumerate}
+
+\section{References}
+\begin{itemize}
+    \item \href{https://chatgpt.com/c/681e3979-1fe4-8007-9c35-20871b70514a}{ChatGPT summary}
+
+    \item \href{https://react.dev/learn/describing-the-ui}{Original source}
+
+    \item \href{https://legacy.reactjs.org/docs/faq-internals.html#:~:text=The%20virtual%20DOM%20,This%20process%20is%20called%20reconciliation}{Virtual DOM}
+\end{itemize}
+
+\end{document}
